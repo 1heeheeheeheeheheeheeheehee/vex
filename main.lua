@@ -24,14 +24,14 @@ local Parts = {"Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Le
 Library.UnloadCallback = Functions.Exit
 
 local MainFrame = Library:CreateWindow({
-	Name = "Vex V2",
+	Name = "Vision V2",
 	Themeable = {
-		Image = "7059346386",
-		Info = "Made by Exunys\nPowered by Pepsi's UI Library",
+		Image = "18443461326",
+		Info = "",
 		Credit = false
 	},
 	Background = "",
-	Theme=[[{"__Designer.Colors.section":"FF0000","__Designer.Colors.topGradient":"000000","__Designer.Settings.ShowHideKey":"Enum.KeyCode.RShift","__Designer.Colors.otherElementText":"FF0000","__Designer.Colors.hoveredOptionBottom":"800000","__Designer.Background.ImageAssetID":"","__Designer.Colors.unhoveredOptionTop":"800000","__Designer.Colors.innerBorder":"333333","__Designer.Colors.unselectedOption":"333333","__Designer.Background.UseBackgroundImage":true,"__Designer.Files.WorkspaceFile":"VexV2","__Designer.Colors.main":"FF0000","__Designer.Colors.outerBorder":"000000","__Designer.Background.ImageColor":"000000","__Designer.Colors.tabText":"FF0000","__Designer.Colors.elementBorder":"111D26","__Designer.Colors.sectionBackground":"333333","__Designer.Colors.selectedOption":"000000","__Designer.Colors.background":"FF0000","__Designer.Colors.bottomGradient":"000000","__Designer.Background.ImageTransparency":95,"__Designer.Colors.hoveredOptionTop":"333333","__Designer.Colors.elementText":"FF0000","__Designer.Colors.unhoveredOptionBottom":"FFFFFF"}]]
+	Theme=[[{"__Designer.Colors.section":"FF0000","__Designer.Colors.topGradient":"000000","__Designer.Settings.ShowHideKey":"Enum.KeyCode.RightShift","__Designer.Colors.otherElementText":"FF0000","__Designer.Colors.hoveredOptionBottom":"800000","__Designer.Background.ImageAssetID":"","__Designer.Colors.unhoveredOptionTop":"800000","__Designer.Colors.innerBorder":"333333","__Designer.Colors.unselectedOption":"333333","__Designer.Background.UseBackgroundImage":true,"__Designer.Files.WorkspaceFile":"VisionV2","__Designer.Colors.main":"FF0000","__Designer.Colors.outerBorder":"000000","__Designer.Background.ImageColor":"000000","__Designer.Colors.tabText":"FF0000","__Designer.Colors.elementBorder":"111D26","__Designer.Colors.sectionBackground":"333333","__Designer.Colors.selectedOption":"000000","__Designer.Colors.background":"000000","__Designer.Colors.bottomGradient":"000000","__Designer.Background.ImageTransparency":95,"__Designer.Colors.hoveredOptionTop":"333333","__Designer.Colors.elementText":"FF0000","__Designer.Colors.unhoveredOptionBottom":"FFFFFF"}]]
 })
 
 --// Tabs
@@ -125,10 +125,10 @@ Values:AddKeybind({
 ]]
 
 Values:AddSlider({
-	Name = "Sensitivity",
-	Value = Settings.Sensitivity,
+	Name = "Strength",
+	Value = Settings.Strength,
 	Callback = function(New, Old)
-		Settings.Sensitivity = New
+		Settings.Strength = New
 	end,
 	Min = 0,
 	Max = 1,
