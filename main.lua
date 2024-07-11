@@ -27,38 +27,12 @@ local MainFrame = Library:CreateWindow({
 	Name = "Vex V2",
 	Themeable = {
 		Image = "7059346386",
-		Info = "",
+		Info = "Made by Exunys\nPowered by Pepsi's UI Library",
 		Credit = false
 	},
 	Background = "",
-	Theme = [[
-{
-    "__Designer.Colors.section": "FF0000",                   -- Red
-    "__Designer.Colors.topGradient": "000000",               -- Black
-    "__Designer.Settings.ShowHideKey": "Enum.KeyCode.RightShift",
-    "__Designer.Colors.otherElementText": "FFFFFF",          -- White
-    "__Designer.Colors.hoveredOptionBottom": "800000",       -- Dark Red
-    "__Designer.Background.ImageAssetID": "",
-    "__Designer.Colors.unhoveredOptionTop": "800000",        -- Dark Red
-    "__Designer.Colors.innerBorder": "333333",               -- Dark Gray
-    "__Designer.Colors.unselectedOption": "333333",          -- Dark Gray
-    "__Designer.Files.WorkspaceFile": "Aimbot V2",
-    "__Designer.Colors.main": "FF0000",                      -- Red
-    "__Designer.Colors.outerBorder": "000000",               -- Black
-    "__Designer.Background.ImageColor": "000000",            -- Black
-    "__Designer.Colors.tabText": "FFFFFF",                   -- White
-    "__Designer.Colors.elementBorder": "333333",             -- Dark Gray
-    "__Designer.Colors.sectionBackground": "000000",         -- Black
-    "__Designer.Colors.selectedOption": "FF0000",            -- Red
-    "__Designer.Colors.background": "000000",                -- Black
-    "__Designer.Colors.bottomGradient": "333333",            -- Dark Gray
-    "__Designer.Background.ImageTransparency": 95,
-    "__Designer.Colors.hoveredOptionTop": "FF0000",          -- Red
-    "__Designer.Colors.elementText": "FFFFFF",               -- White
-    "__Designer.Colors.unhoveredOptionBottom": "333333"      -- Dark Gray
-}
-]]
-
+	Theme = [[{"__Designer.Colors.section":"ADC7FF","__Designer.Colors.topGradient":"1B242F","__Designer.Settings.ShowHideKey":"Enum.KeyCode.RightShift","__Designer.Colors.otherElementText":"54637D","__Designer.Colors.hoveredOptionBottom":"38667D","__Designer.Background.ImageAssetID":"","__Designer.Colors.unhoveredOptionTop":"407495","__Designer.Colors.innerBorder":"2C4168","__Designer.Colors.unselectedOption":"4E6EA0","__Designer.Background.UseBackgroundImage":true,"__Designer.Files.WorkspaceFile":"Aimbot V2","__Designer.Colors.main":"23A0FF","__Designer.Colors.outerBorder":"162943","__Designer.Background.ImageColor":"FFFFFF","__Designer.Colors.tabText":"C9DFF1","__Designer.Colors.elementBorder":"111D26","__Designer.Colors.sectionBackground":"0E141C","__Designer.Colors.selectedOption":"558AC2","__Designer.Colors.background":"11182A","__Designer.Colors.bottomGradient":"202B42","__Designer.Background.ImageTransparency":95,"__Designer.Colors.hoveredOptionTop":"4885A0","__Designer.Colors.elementText":"7692B8","__Designer.Colors.unhoveredOptionBottom":"5471C4"}]]
+})
 
 --// Tabs
 
@@ -67,7 +41,7 @@ local SettingsTab = MainFrame:CreateTab({
 })
 
 local FOVSettingsTab = MainFrame:CreateTab({
-	Name = "FOV"
+	Name = "FOV Settings"
 })
 
 local FunctionsTab = MainFrame:CreateTab({
@@ -107,10 +81,10 @@ local FunctionsSection = FunctionsTab:CreateSection({
 --// Settings / Values
 
 Values:AddToggle({
-	Name = "Disable",
-	Value = Settings.Disabled,
+	Name = "Enabled",
+	Value = Settings.Enabled,
 	Callback = function(New, Old)
-		Settings.Disable = New
+		Settings.Enabled = New
 	end
 }).Default = Settings.Enabled
 
