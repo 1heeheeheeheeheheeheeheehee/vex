@@ -1,170 +1,298 @@
-getgenv().OldAimPart = "UpperTorso"
-getgenv().AimPart = "UpperTorso" -- For R15 Games: {UpperTorso, LowerTorso, HumanoidRootPart, Head} | For R6 Games: {Head, Torso, HumanoidRootPart}  
-    getgenv().AimlockKey = "c"
-    getgenv().AimRadius = 30 -- How far away from someones character you want to lock on at
-    getgenv().ThirdPerson = true 
-    getgenv().FirstPerson = true
-    getgenv().TeamCheck = false -- Check if Target is on your Team (True means it wont lock onto your teamates, false is vice versa) (Set it to false if there are no teams)
-    getgenv().PredictMovement = true -- Predicts if they are moving in fast velocity (like jumping) so the aimbot will go a bit faster to match their speed 
-    getgenv().PredictionVelocity = 6.612
-    getgenv().CheckIfJumped = true
-    getgenv().Smoothness = true
-    getgenv().SmoothnessAmount = 0.015
+--// Cache
 
-    local Players, Uis, RService, SGui = game:GetService"Players", game:GetService"UserInputService", game:GetService"RunService", game:GetService"StarterGui";
-    local Client, Mouse, Camera, CF, RNew, Vec3, Vec2 = Players.LocalPlayer, Players.LocalPlayer:GetMouse(), workspace.CurrentCamera, CFrame.new, Ray.new, Vector3.new, Vector2.new;
-    local Aimlock, MousePressed, CanNotify = true, false, false;
-    local AimlockTarget;
-    local OldPre;
-    
+local loadstring, game, getgenv, setclipboard = loadstring, game, getgenv, setclipboard
 
-    
-    getgenv().WorldToViewportPoint = function(P)
-        return Camera:WorldToViewportPoint(P)
-    end
-    
-    getgenv().WorldToScreenPoint = function(P)
-        return Camera.WorldToScreenPoint(Camera, P)
-    end
-    
-    getgenv().GetObscuringObjects = function(T)
-        if T and T:FindFirstChild(getgenv().AimPart) and Client and Client.Character:FindFirstChild("Head") then 
-            local RayPos = workspace:FindPartOnRay(RNew(
-                T[getgenv().AimPart].Position, Client.Character.Head.Position)
-            )
-            if RayPos then return RayPos:IsDescendantOf(T) end
-        end
-    end
-    
-    getgenv().GetNearestTarget = function()
-        -- Credits to whoever made this, i didnt make it, and my own mouse2plr function kinda sucks
-        local players = {}
-        local PLAYER_HOLD  = {}
-        local DISTANCES = {}
-        for i, v in pairs(Players:GetPlayers()) do
-            if v ~= Client then
-                table.insert(players, v)
-            end
-        end
-        for i, v in pairs(players) do
-            if v.Character ~= nil then
-                local AIM = v.Character:FindFirstChild("Head")
-                if getgenv().TeamCheck == true and v.Team ~= Client.Team then
-                    local DISTANCE = (v.Character:FindFirstChild("Head").Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
-                    local RAY = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (Mouse.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * DISTANCE)
-                    local HIT,POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
-                    local DIFF = math.floor((POS - AIM.Position).magnitude)
-                    PLAYER_HOLD[v.Name .. i] = {}
-                    PLAYER_HOLD[v.Name .. i].dist= DISTANCE
-                    PLAYER_HOLD[v.Name .. i].plr = v
-                    PLAYER_HOLD[v.Name .. i].diff = DIFF
-                    table.insert(DISTANCES, DIFF)
-                elseif getgenv().TeamCheck == false and v.Team == Client.Team then 
-                    local DISTANCE = (v.Character:FindFirstChild("Head").Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
-                    local RAY = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (Mouse.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * DISTANCE)
-                    local HIT,POS = game.Workspace:FindPartOnRay(RAY, game.Workspace)
-                    local DIFF = math.floor((POS - AIM.Position).magnitude)
-                    PLAYER_HOLD[v.Name .. i] = {}
-                    PLAYER_HOLD[v.Name .. i].dist= DISTANCE
-                    PLAYER_HOLD[v.Name .. i].plr = v
-                    PLAYER_HOLD[v.Name .. i].diff = DIFF
-                    table.insert(DISTANCES, DIFF)
-                end
-            end
-        end
-        
-        if unpack(DISTANCES) == nil then
-            return nil
-        end
-        
-        local L_DISTANCE = math.floor(math.min(unpack(DISTANCES)))
-        if L_DISTANCE > getgenv().AimRadius then
-            return nil
-        end
-        
-        for i, v in pairs(PLAYER_HOLD) do
-            if v.diff == L_DISTANCE then
-                return v.plr
-            end
-        end
-        return nil
-    end
-    
-    Mouse.KeyDown:Connect(function(a)
-        if not (Uis:GetFocusedTextBox()) then 
-            if a == AimlockKey and AimlockTarget == nil then
-                pcall(function()
-                    if MousePressed ~= true then MousePressed = true end 
-                    local Target;Target = GetNearestTarget()
-                    if Target ~= nil then 
-                        AimlockTarget = Target
-                    end
-                end)
-            elseif a == AimlockKey and AimlockTarget ~= nil then
-                if AimlockTarget ~= nil then AimlockTarget = nil end
-                if MousePressed ~= false then 
-                    MousePressed = false 
-                end
-            end
-        end
-    end)
-    
-    RService.RenderStepped:Connect(function()
-        if getgenv().ThirdPerson == true and getgenv().FirstPerson == true then 
-            if (Camera.Focus.p - Camera.CoordinateFrame.p).Magnitude > 1 or (Camera.Focus.p - Camera.CoordinateFrame.p).Magnitude <= 1 then 
-                CanNotify = true 
-            else 
-                CanNotify = false 
-            end
-        elseif getgenv().ThirdPerson == true and getgenv().FirstPerson == false then 
-            if (Camera.Focus.p - Camera.CoordinateFrame.p).Magnitude > 1 then 
-                CanNotify = true 
-            else 
-                CanNotify = false 
-            end
-        elseif getgenv().ThirdPerson == false and getgenv().FirstPerson == true then 
-            if (Camera.Focus.p - Camera.CoordinateFrame.p).Magnitude <= 1 then 
-                CanNotify = true 
-            else 
-                CanNotify = false 
-            end
-        end
-        if Aimlock == true and MousePressed == true then 
-            if AimlockTarget and AimlockTarget.Character and AimlockTarget.Character:FindFirstChild(getgenv().AimPart) then 
-                if getgenv().FirstPerson == true then
-                    if CanNotify == true then
-                        if getgenv().PredictMovement == true then
-                            if getgenv().Smoothness == true then
-                                --// The part we're going to lerp/smoothen \\--
-                                local Main = CF(Camera.CFrame.p, AimlockTarget.Character[getgenv().AimPart].Position + AimlockTarget.Character[getgenv().AimPart].Velocity/PredictionVelocity)
-                                
-                                --// Making it work \\--
-                                Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().SmoothnessAmount, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut)
-                            else
-                                Camera.CFrame = CF(Camera.CFrame.p, AimlockTarget.Character[getgenv().AimPart].Position + AimlockTarget.Character[getgenv().AimPart].Velocity/PredictionVelocity)
-                            end
-                        elseif getgenv().PredictMovement == false then 
-                            if getgenv().Smoothness == true then
-                                --// The part we're going to lerp/smoothen \\--
-                                local Main = CF(Camera.CFrame.p, AimlockTarget.Character[getgenv().AimPart].Position)
+--// Loaded check
 
-                                --// Making it work \\--
-                                Camera.CFrame = Camera.CFrame:Lerp(Main, getgenv().SmoothnessAmount, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut)
-                            else
-                                Camera.CFrame = CF(Camera.CFrame.p, AimlockTarget.Character[getgenv().AimPart].Position)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-         if CheckIfJumped == true then
-       if AimlockTarget.Character.HuDDDDDDDDDDWmanoid.FloorMaterial == Enum.Material.Air then
-    
-           getgenv().AimPart = "UpperTorso"
-       else
-         getgenv().AimPart = getgenv().OldAimPart
+if getgenv().Aimbot then return end
 
-       end
-    end
-end)
+--// Load Aimbot V2 (Raw)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V2/main/Resources/Scripts/Raw%20Main.lua"))()
+
+--// Variables
+
+local Aimbot = getgenv().Aimbot
+local Settings, FOVSettings, Functions = Aimbot.Settings, Aimbot.FOVSettings, Aimbot.Functions
+
+local Library = loadstring(game:GetObjects("rbxassetid://7657867786")[1].Source)() -- Pepsi's UI Library
+
+local Parts = {"Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "LeftHand", "RightHand", "LeftLowerArm", "RightLowerArm", "LeftUpperArm", "RightUpperArm", "LeftFoot", "LeftLowerLeg", "UpperTorso", "LeftUpperLeg", "RightFoot", "RightLowerLeg", "LowerTorso", "RightUpperLeg"}
+
+--// Frame
+
+Library.UnloadCallback = Functions.Exit
+
+local MainFrame = Library:CreateWindow({
+	Name = "Aimbot V2",
+	Themeable = {
+		Image = "7059346386",
+		Info = "Made by Exunys\nPowered by Pepsi's UI Library",
+		Credit = false
+	},
+	Background = "",
+	Theme = [[{"__Designer.Colors.section":"ADC7FF","__Designer.Colors.topGradient":"1B242F","__Designer.Settings.ShowHideKey":"Enum.KeyCode.RightShift","__Designer.Colors.otherElementText":"54637D","__Designer.Colors.hoveredOptionBottom":"38667D","__Designer.Background.ImageAssetID":"","__Designer.Colors.unhoveredOptionTop":"407495","__Designer.Colors.innerBorder":"2C4168","__Designer.Colors.unselectedOption":"4E6EA0","__Designer.Background.UseBackgroundImage":true,"__Designer.Files.WorkspaceFile":"Aimbot V2","__Designer.Colors.main":"23A0FF","__Designer.Colors.outerBorder":"162943","__Designer.Background.ImageColor":"FFFFFF","__Designer.Colors.tabText":"C9DFF1","__Designer.Colors.elementBorder":"111D26","__Designer.Colors.sectionBackground":"0E141C","__Designer.Colors.selectedOption":"558AC2","__Designer.Colors.background":"11182A","__Designer.Colors.bottomGradient":"202B42","__Designer.Background.ImageTransparency":95,"__Designer.Colors.hoveredOptionTop":"4885A0","__Designer.Colors.elementText":"7692B8","__Designer.Colors.unhoveredOptionBottom":"5471C4"}]]
+})
+
+--// Tabs
+
+local SettingsTab = MainFrame:CreateTab({
+	Name = "Settings"
+})
+
+local FOVSettingsTab = MainFrame:CreateTab({
+	Name = "FOV Settings"
+})
+
+local FunctionsTab = MainFrame:CreateTab({
+	Name = "Functions"
+})
+
+--// Settings - Sections
+
+local Values = SettingsTab:CreateSection({
+	Name = "Values"
+})
+
+local Checks = SettingsTab:CreateSection({
+	Name = "Checks"
+})
+
+local ThirdPerson = SettingsTab:CreateSection({
+	Name = "Third Person"
+})
+
+--// FOV Settings - Sections
+
+local FOV_Values = FOVSettingsTab:CreateSection({
+	Name = "Values"
+})
+
+local FOV_Appearance = FOVSettingsTab:CreateSection({
+	Name = "Appearance"
+})
+
+--// Functions - Sections
+
+local FunctionsSection = FunctionsTab:CreateSection({
+	Name = "Functions"
+})
+
+--// Settings / Values
+
+Values:AddToggle({
+	Name = "Enabled",
+	Value = Settings.Enabled,
+	Callback = function(New, Old)
+		Settings.Enabled = New
+	end
+}).Default = Settings.Enabled
+
+Values:AddToggle({
+	Name = "Toggle",
+	Value = Settings.Toggle,
+	Callback = function(New, Old)
+		Settings.Toggle = New
+	end
+}).Default = Settings.Toggle
+
+Settings.LockPart = Parts[1]; Values:AddDropdown({
+	Name = "Lock Part",
+	Value = Parts[1],
+	Callback = function(New, Old)
+		Settings.LockPart = New
+	end,
+	List = Parts,
+	Nothing = "Head"
+}).Default = Parts[1]
+
+Values:AddTextbox({ -- Using a Textbox instead of a Keybind because the UI Library doesn't support Mouse inputs like Left Click / Right Click...
+	Name = "Hotkey",
+	Value = Settings.TriggerKey,
+	Callback = function(New, Old)
+		Settings.TriggerKey = New
+	end
+}).Default = Settings.TriggerKey
+
+--[[
+Values:AddKeybind({
+	Name = "Hotkey",
+	Value = Settings.TriggerKey,
+	Callback = function(New, Old)
+		Settings.TriggerKey = stringmatch(tostring(New), "Enum%.[UserInputType]*[KeyCode]*%.(.+)")
+	end,
+}).Default = Settings.TriggerKey
+]]
+
+Values:AddSlider({
+	Name = "Sensitivity",
+	Value = Settings.Sensitivity,
+	Callback = function(New, Old)
+		Settings.Sensitivity = New
+	end,
+	Min = 0,
+	Max = 1,
+	Decimals = 2
+}).Default = Settings.Sensitivity
+
+--// Settings / Checks
+
+Checks:AddToggle({
+	Name = "Team Check",
+	Value = Settings.TeamCheck,
+	Callback = function(New, Old)
+		Settings.TeamCheck = New
+	end
+}).Default = Settings.TeamCheck
+
+Checks:AddToggle({
+	Name = "Wall Check",
+	Value = Settings.WallCheck,
+	Callback = function(New, Old)
+		Settings.WallCheck = New
+	end
+}).Default = Settings.WallCheck
+
+Checks:AddToggle({
+	Name = "Alive Check",
+	Value = Settings.AliveCheck,
+	Callback = function(New, Old)
+		Settings.AliveCheck = New
+	end
+}).Default = Settings.AliveCheck
+
+--// Settings / ThirdPerson
+
+ThirdPerson:AddToggle({
+	Name = "Enable Third Person",
+	Value = Settings.ThirdPerson,
+	Callback = function(New, Old)
+		Settings.ThirdPerson = New
+	end
+}).Default = Settings.ThirdPerson
+
+ThirdPerson:AddSlider({
+	Name = "Sensitivity",
+	Value = Settings.ThirdPersonSensitivity,
+	Callback = function(New, Old)
+		Settings.ThirdPersonSensitivity = New
+	end,
+	Min = 0.1,
+	Max = 5,
+	Decimals = 1
+}).Default = Settings.ThirdPersonSensitivity
+
+--// FOV Settings / Values
+
+FOV_Values:AddToggle({
+	Name = "Enabled",
+	Value = FOVSettings.Enabled,
+	Callback = function(New, Old)
+		FOVSettings.Enabled = New
+	end
+}).Default = FOVSettings.Enabled
+
+FOV_Values:AddToggle({
+	Name = "Visible",
+	Value = FOVSettings.Visible,
+	Callback = function(New, Old)
+		FOVSettings.Visible = New
+	end
+}).Default = FOVSettings.Visible
+
+FOV_Values:AddSlider({
+	Name = "Amount",
+	Value = FOVSettings.Amount,
+	Callback = function(New, Old)
+		FOVSettings.Amount = New
+	end,
+	Min = 10,
+	Max = 300
+}).Default = FOVSettings.Amount
+
+--// FOV Settings / Appearance
+
+FOV_Appearance:AddToggle({
+	Name = "Filled",
+	Value = FOVSettings.Filled,
+	Callback = function(New, Old)
+		FOVSettings.Filled = New
+	end
+}).Default = FOVSettings.Filled
+
+FOV_Appearance:AddSlider({
+	Name = "Transparency",
+	Value = FOVSettings.Transparency,
+	Callback = function(New, Old)
+		FOVSettings.Transparency = New
+	end,
+	Min = 0,
+	Max = 1,
+	Decimal = 1
+}).Default = FOVSettings.Transparency
+
+FOV_Appearance:AddSlider({
+	Name = "Sides",
+	Value = FOVSettings.Sides,
+	Callback = function(New, Old)
+		FOVSettings.Sides = New
+	end,
+	Min = 3,
+	Max = 60
+}).Default = FOVSettings.Sides
+
+FOV_Appearance:AddSlider({
+	Name = "Thickness",
+	Value = FOVSettings.Thickness,
+	Callback = function(New, Old)
+		FOVSettings.Thickness = New
+	end,
+	Min = 1,
+	Max = 50
+}).Default = FOVSettings.Thickness
+
+FOV_Appearance:AddColorpicker({
+	Name = "Color",
+	Value = FOVSettings.Color,
+	Callback = function(New, Old)
+		FOVSettings.Color = New
+	end
+}).Default = FOVSettings.Color
+
+FOV_Appearance:AddColorpicker({
+	Name = "Locked Color",
+	Value = FOVSettings.LockedColor,
+	Callback = function(New, Old)
+		FOVSettings.LockedColor = New
+	end
+}).Default = FOVSettings.LockedColor
+
+--// Functions / Functions
+
+FunctionsSection:AddButton({
+	Name = "Reset Settings",
+	Callback = function()
+		Functions.ResetSettings()
+		Library.ResetAll()
+	end
+})
+
+FunctionsSection:AddButton({
+	Name = "Restart",
+	Callback = Functions.Restart
+})
+
+FunctionsSection:AddButton({
+	Name = "Exit",
+	Callback = function()
+		Functions:Exit()
+		Library.Unload()
+	end
+})
+
+FunctionsSection:AddButton({
+	Name = "Copy Script Page",
+	Callback = function()
+		setclipboard("https://github.com/Exunys/Aimbot-V2")
+	end
+})
