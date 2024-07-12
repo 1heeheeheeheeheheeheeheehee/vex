@@ -35,7 +35,7 @@ local Aimbot = loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys
 
 --// Variables
 
-local MainFrame = GUI:CreateWindow({WindowName = "AirHub V2", Color = Color3.fromRGB(150, 100, 150), Keybind = Enum.KeyCode.RightShift}, game.CoreGui)
+local MainFrame = GUI:CreateWindow({WindowName = "Vex V2", Color = Color3.fromRGB(150, 100, 150), Keybind = Enum.KeyCode.RightShift}, game.CoreGui)
 
 local ESP_DeveloperSettings = ESP.DeveloperSettings
 local ESP_Settings = ESP.Settings
